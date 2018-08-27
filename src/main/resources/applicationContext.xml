@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+	
+	<context:component-scan base-package="com.ggy.truf">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+	<!-- 引入外部属性文件 -->
+	<context:property-placeholder location="classpath:db.properties"/>
+	<!-- 配置数据源 -->
+	<bean id="pooledDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="jdbcUrl" value="${jdbc.url}"></property>
+		<property name="driverClass" value="${jdbc.driverClass}"></property>
+		<property name="user" value="${jdbc.username}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+	</bean>
+	<!-- Mybatis的整合 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 指定数据源 -->
+		<property name="dataSource" ref="pooledDataSource"></property>
+		<!-- 指定mybatis全局文件的位置 -->
+		<property name="configLocation" value="classpath:mybatis-config.xml"></property>
+		<!-- 指定mybatis的mapper映射文件 -->
+		<property name="mapperLocations" value="classpath:mappers/*.xml"></property>
+	</bean>
+	
+	<!-- 配置扫描器，将mybatis的接口的实现加入ioc容器中 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!-- 配置扫描所有的dao接口的实现，加入ioc容器中 -->
+		<property name="basePackage" value="com.ggy.truf.dao"></property>
+	</bean>
+	
+	<!-- 配置一个可以批量执行的sqlSession--> 
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"></constructor-arg>
+		<!--<constructor-arg name="executorType" value="BATCH"></constructor-arg>-->
+	</bean>
+	
+	<!-- 配置spring声明式事务 -->
+	<!-- 1配置事务管理器 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="pooledDataSource"></property>
+	</bean>
+	<!-- 2配置事务属性 -->
+	<aop:config>
+		<!-- 配置切入点表达式 -->
+		<aop:pointcut expression="execution(* com.ggy.truf.service.*.*(..))" id="pointcut"/>
+		<aop:advisor advice-ref="advice" pointcut-ref="pointcut"/>
+	</aop:config>
+	
+	<!-- 配置事务增强 -->
+	<tx:advice id="advice" transaction-manager="transactionManager">
+		<!-- 配置属性 -->
+		<tx:attributes>
+			<tx:method name="register" propagation="REQUIRED"/>
+			<tx:method name="add*" propagation="REQUIRED"/>
+			<tx:method name="insert*" propagation="REQUIRED"/>
+			<tx:method name="save*" propagation="REQUIRED"/>
+			<tx:method name="update*" propagation="REQUIRED"/>
+			<tx:method name="edit*" propagation="REQUIRED"/>
+			<tx:method name="delete*" propagation="REQUIRED"/>
+			<tx:method name="remove*" propagation="REQUIRED"/>
+			<tx:method name="login" read-only="true"/>
+			<tx:method name="get*" read-only="true"/>
+			<tx:method name="query*" read-only="true"/>
+			<tx:method name="find*" read-only="true"/>
+			<!--<tx:method name="select*" read-only="true"/>-->
+			<tx:method name="*"/>
+		</tx:attributes>
+	</tx:advice>
+
+</beans>

@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ggy.truf.dao.UserMapper">
+    <resultMap id="BaseResultMap" type="com.ggy.truf.pojo.User">
+        <constructor>
+            <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+            <arg column="username" javaType="java.lang.String" jdbcType="VARCHAR" />
+            <arg column="password" javaType="java.lang.String" jdbcType="VARCHAR" />
+            <arg column="name" javaType="java.lang.String" jdbcType="VARCHAR" />
+            <arg column="email" javaType="java.lang.String" jdbcType="VARCHAR" />
+            <arg column="phone" javaType="java.lang.String" jdbcType="VARCHAR" />
+            <arg column="question" javaType="java.lang.String" jdbcType="VARCHAR" />
+            <arg column="answer" javaType="java.lang.String" jdbcType="VARCHAR" />
+            <arg column="role" javaType="java.lang.Integer" jdbcType="INTEGER" />
+            <arg column="status" javaType="java.lang.Integer" jdbcType="INTEGER" />
+            <arg column="code" javaType="java.lang.String" jdbcType="VARCHAR" />
+            <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+            <arg column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, username, password, name, email, phone, question, answer, role, status, code, 
+    create_time, update_time
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from truf_user
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from truf_user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.ggy.truf.pojo.User">
+    insert into truf_user (id, username, password, 
+      name, email, phone, 
+      question, answer, role, 
+      status, code, create_time, 
+      update_time)
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
+      #{question,jdbcType=VARCHAR}, #{answer,jdbcType=VARCHAR}, #{role,jdbcType=INTEGER}, 
+      0, #{code,jdbcType=VARCHAR}, now(),
+      now())
+  </insert>
+    <insert id="insertSelective" parameterType="com.ggy.truf.pojo.User">
+        insert into truf_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="username != null">
+                username,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="question != null">
+                question,
+            </if>
+            <if test="answer != null">
+                answer,
+            </if>
+            <if test="role != null">
+                role,
+            </if>
+            status,
+            <if test="code != null">
+                code,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="username != null">
+                #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="question != null">
+                #{question,jdbcType=VARCHAR},
+            </if>
+            <if test="answer != null">
+                #{answer,jdbcType=VARCHAR},
+            </if>
+            <if test="role != null">
+                #{role,jdbcType=INTEGER},
+            </if>
+            0,
+            <if test="code != null">
+                #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                now(),
+            </if>
+            <if test="updateTime != null">
+                now(),
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ggy.truf.pojo.User">
+        update truf_user
+        <set>
+            <if test="username != null">
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="question != null">
+                question = #{question,jdbcType=VARCHAR},
+            </if>
+            <if test="answer != null">
+                answer = #{answer,jdbcType=VARCHAR},
+            </if>
+            <if test="role != null">
+                role = #{role,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="code != null">
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = now(),
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ggy.truf.pojo.User">
+    update truf_user
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      question = #{question,jdbcType=VARCHAR},
+      answer = #{answer,jdbcType=VARCHAR},
+      role = #{role,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      code = #{code,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = now()
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <!-- 自定义功能区 -->
+    <!-- 检查用户名是否存在 -->
+    <select id="checkUsername" parameterType="string" resultType="java.lang.Integer">
+    select
+    count(1)
+    from truf_user
+    where username = #{username,jdbcType=VARCHAR}
+  </select>
+    <!-- 检查Email是否存在 -->
+    <select id="checkEmail" parameterType="string" resultType="java.lang.Integer">
+    select
+    count(1)
+    from truf_user	
+    where email = #{email,jdbcType=VARCHAR}
+  </select>
+    <!-- 通过激活码查询用户信息 -->
+    <select id="updateUserByCode" parameterType="map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from truf_user
+        where code = #{code,jdbcType=VARCHAR}
+    </select>
+    <!-- 检查用户名和密码是否匹配 -->
+    <select id="login" parameterType="map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from truf_user
+        where username = #{username,jdbcType=VARCHAR}
+        and password = #{password,jdbcType=VARCHAR}
+    </select>
+    <select id="selectQuestionByUsername" parameterType="map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from truf_user
+        where username = #{username,jdbcType=VARCHAR}
+    </select>
+    <select id="checkAnswer" parameterType="map" resultType="int">
+    SELECT
+    count(1)
+    from truf_user
+    where username=#{username}
+    and question = #{question}
+    and answer = #{answer}
+  </select>
+
+    <update id="updatePasswordByUsername" parameterType="map">
+    update truf_user
+    SET password = #{passwordNew},update_time = now()
+    where username = #{username}
+  </update>
+
+    <select id="checkPassword" parameterType="map" resultType="int">
+    SELECT
+    count(1)
+    from truf_user
+    where password = #{password}
+    and id = #{id}
+  </select>
+
+
+    <select id="checkEmailByUserId" parameterType="map" resultType="int">
+    select count(1) from truf_user
+    where email = #{email}
+    and id != #{id}
+  </select>
+
+</mapper>
